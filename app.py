@@ -1,18 +1,50 @@
 import os
+import sys
+import click
 
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.path.join(app.root_path, 'sqlite.db')
+
+WIN = sys.platform.startswith('win')
+if WIN:
+    prefix = 'sqlite:///'  # 如果是windows系统,三个斜杠
+else:
+    prefix = 'sqlite:////'  # 如果是Mac, Linux系统,四个斜杠
+
+app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(app.root_path, 'sqlite.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
 
 
 db = SQLAlchemy(app)
 
 
-@app.route('/')
-def index():
+# 创建数据库模型类
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=True)
+    name = db.Column(db.String(20))
+
+
+class Movie(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(60))
+    year = db.Column(db.String(4))
+
+
+# 自定义initdb
+@app.cli.command()
+@click.option('--drop', is_flag=True, help='删除之后在创建')
+def initdb(drop):
+    if drop:
+        db.drop_all()
+    db.create_all()
+    click.echo('初始化数据库')
+
+
+# 自定义命令forge, 把数据写入数据库
+@app.cli.command()
+def forge():
     name = "Long"
     movies = [
         {'title': '杀破狼', 'year': '2003'},
@@ -26,4 +58,19 @@ def index():
         {'title': '导火索', 'year': '2005'},
         {'title': '叶问', 'year': '2015'},
     ]
-    return render_template('index.html', name=name, movies=movies)
+    user = User(name=name)
+    db.session.add(user)
+    for m in movies:
+        movie = Movie(title=m['title'], year=m['year'])
+        db.session.add(movie)
+
+    db.session.commit()
+    click.echo('数据导入完成')
+
+
+@app.route('/')
+def index():
+    user = User.query.first()
+    movies = Movie.query.all()
+
+    return render_template('index.html', name=user, movies=movies)
