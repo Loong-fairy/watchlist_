@@ -7,22 +7,35 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="{{ url_for('static', filename='icon.jpg') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>{{ user.name }}'s WatchList</title>
+    <title>{% if current_user.is_authenticated %}{{ user.name }}'s WatchList{% endif %}WatchList</title>
     {% endblock %}
 </head>
 <body>
+    {# 消息队列,返回flash()函数的提示信息 #}
     {% for message in get_flashed_messages() %}
         <div class="alert">{{ message }}</div>
     {% endfor %}
+    {% if current_user.is_authenticated %}
     <h2>
         <img class="avatar" src="{{ url_for('static', filename='images/2.jpg') }}" alt="">
         {{ user.name }}'s WatchList
     </h2>
+    {% endif %}
     <nav>
         <ul>
             <li>
                 <a href="{{ url_for('index') }}">首页</a>
             </li>
+            <li style="float: right">
+                <a href="{{ url_for('logout') }}">退出</a>
+            </li>
+            <li style="float: right">
+                <a href="{{ url_for('login') }}">登录</a>
+            </li>
+            <li style="float: right">
+                <a href="{{ url_for('settings') }}">设置</a>
+            </li>
+
         </ul>
     </nav>
     {% block content %}{% endblock %}
