@@ -46,7 +46,7 @@ nav ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background: #333333;
+    background: #5d5d5d;
 }
 
 nav li {
@@ -62,7 +62,9 @@ nav li a {
 }
 
 nav li a:hover {
-    background: #111111;
+    background: #000000;
+    color: white;
+
 }
 
 .float-right {

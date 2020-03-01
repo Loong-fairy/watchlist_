@@ -7,3 +7,5 @@ __pycache__/
 .idea
 *.db
 .coverage
+app.py
+test.html

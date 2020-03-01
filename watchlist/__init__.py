@@ -3,7 +3,7 @@ import sys
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 
 app = Flask(__name__)
@@ -24,6 +24,7 @@ db = SQLAlchemy(app)
 
 # Flask-login 初始化操作
 login_manager = LoginManager(app)  # 实例化扩展类
+login_manager.init_app(app)
 
 
 @login_manager.user_loader
@@ -35,12 +36,17 @@ def load_user(user_id):  # 创建用户加载回调函数, 接受用户ID作为�
 
 login_manager.login_view = 'login'
 login_manager.login_message = '没有登录'
+login_manager.needs_refresh_message = '刷新登录!'
 
 
 @app.context_processor  # 模板上下文处理函数
 def inject_user():
     from watchlist.models import User
-    user = User.query.first()
-    return dict(user=user)
+    try:
+        user = User.query.filter_by(id=current_user.id).first()
+        return dict(user=user)
+    except AttributeError:
+        return dict(user='')
+
 
 from watchlist import views, error, commands

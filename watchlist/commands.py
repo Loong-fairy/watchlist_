@@ -2,7 +2,7 @@ import click
 from watchlist import app, db
 
 # 自定义initdb
-from watchlist.models import Movie, User
+from watchlist.models import Articles, User
 
 
 @app.cli.command()
@@ -18,23 +18,23 @@ def initdb(drop):
 @app.cli.command()
 def forge():
     name = "Long"
-    movies = [
-        {'title': '杀破狼', 'year': '2003'},
-        {'title': '扫毒', 'year': '2018'},
-        {'title': '捉妖记', 'year': '2016'},
-        {'title': '囧妈', 'year': '2020'},
-        {'title': '葫芦娃', 'year': '1989'},
-        {'title': '玻璃盒子', 'year': '2020'},
-        {'title': '调酒师', 'year': '2020'},
-        {'title': '釜山行', 'year': '2017'},
-        {'title': '导火索', 'year': '2005'},
-        {'title': '叶问', 'year': '2015'},
+    articles = [
+        {'title': '1', 'content': '1', 'author': '1', 'user_id': 1},
+        {'title': '2', 'content': '2', 'author': '2', 'user_id': 1},
+        {'title': '3', 'content': '3', 'author': '3', 'user_id': 1},
+        {'title': '4', 'content': '4', 'author': '4', 'user_id': 1},
+        {'title': '5', 'content': '5', 'author': '5', 'user_id': 1},
+        {'title': '6', 'content': '6', 'author': '6', 'user_id': 1},
+        {'title': '7', 'content': '7', 'author': '7', 'user_id': 1},
+        {'title': '8', 'content': '8', 'author': '8', 'user_id': 1},
+        {'title': '9', 'content': '9', 'author': '9', 'user_id': 1},
+        {'title': '10', 'content': '10', 'author': '10', 'user_id': 1}
     ]
     user = User(name=name)
     db.session.add(user)
-    for m in movies:
-        movie = Movie(title=m['title'], year=m['year'])
-        db.session.add(movie)
+    for a in articles:
+        blog = Articles(title=a['title'], content=a['content'], author=a['author'], user_id=a['user_id'])
+        db.session.add(blog)
 
     db.session.commit()
     click.echo('数据导入完成')
@@ -53,7 +53,7 @@ def admin(username, password):
         user.set_password(password)
     else:
         click.echo('创建用户')
-        user = User(username=username, name="Admin")
+        user = User(username=username, name="Long")
         user.set_password(password)
         db.session.add(user)
 
