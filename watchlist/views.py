@@ -125,7 +125,7 @@ def login():
         if not username or not password:
             flash('输入错误')
             return redirect(url_for('login'))
-        user = User.query.first()
+        user = User.query.filter_by(username=username).first()
         if username == user.username and user.validate_password(password):
             login_user(user)  # 登录成功
             flash('登陆成功')
@@ -133,6 +133,35 @@ def login():
         flash('用户名或密码输入错误')
         return redirect(url_for('login'))
     return render_template('login.html')
+
+
+# 用户登录 flask提供的login_user()函数
+@app.route('/user/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if not username or not password:
+            flash('用户名或密码不能为空')
+            return redirect(url_for('register'))
+        user = User.query.filter_by(username=username).first()
+        if user:
+            flash('该用户名已注册')
+            return redirect(url_for('register'))
+        elif len(username) > 20:
+            flash('用户名过长--[len<20]')
+            return redirect(url_for('register'))
+        elif len(password) > 16:
+            flash('密码过长--[len<16]')
+            return redirect(url_for('register'))
+        add_user = User(username=username, name=username)
+        add_user.set_password(password)
+        db.session.add(add_user)
+        db.session.commit()
+        flash('注册成功')
+        return redirect(url_for('login'))
+    return render_template('register.html')
 
 
 # 用户登出

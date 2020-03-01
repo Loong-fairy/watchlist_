@@ -7,7 +7,7 @@
                 <a href="{{ url_for('look_blog', blog_id=blog.id) }}" target="_blank" title="查看全文" style="text-decoration: none;color:inherit;">
                     <span style="color: #a6a6a6">{{ "{}".format(blog.updated)[5:-10] }}</span>
                     &emsp;标题:
-                    <span style="color: #2ed3ff;width: 350px;display: inline-block;overflow: hidden;">{{ blog.title }}</span>
+                    <span style="color: #2ed3ff;width: 350px;display: inline-block;overflow: hidden;line-height: 20px;margin-bottom: -5px">{{ blog.title }}</span>
                 </a>
                 {% if current_user.is_authenticated %}
                     <span class="float-right">

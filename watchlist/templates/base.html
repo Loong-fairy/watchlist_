@@ -46,8 +46,12 @@
             </li>
             {% else %}
             <li style="float: right">
+                <a href="{{ url_for('register') }}">注册</a>
+            </li>
+            <li style="float: right">
                 <a href="{{ url_for('login') }}">登录</a>
             </li>
+
             {% endif %}
             {% if current_user.is_authenticated %}
             <li style="float: right">
