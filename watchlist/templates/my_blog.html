@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<p>{{ articles.count() }} 篇文章</p>
+    <ul class="movie-list">
+        {% for blog in articles|sort(reverse=true, attribute="updated") %}
+            <li>
+                <a href="{{ url_for('look_blog', blog_id=blog.id) }}" target="_blank" title="查看全文" style="text-decoration: none;color:inherit;">
+                    <span style="color: #a6a6a6">{{ "{}".format(blog.updated)[5:-10] }}</span>
+                    &emsp;标题:
+                    <span style="color: #2ed3ff;width: 350px;display: inline-block;overflow: hidden;">{{ blog.title }}</span>
+                </a>
+                {% if current_user.is_authenticated %}
+                    <span class="float-right">
+                        <a class="btn" href="{{ url_for('edit', blog_id=blog.id) }}" target="_blank">编辑</a>
+                    </span>
+                    <span class="float-right">
+                        <form class="inline-form" action="{{ url_for('delete', blog_id=blog.id) }}" method="post">
+                            <input class="btn" type="submit" name="'delete" value="删除" onclick="return confirm('确认删除?')">
+                        </form>
+                    </span>
+                {% endif %}
+            </li>
+        {% endfor %}
+
+    </ul>
+
+{% endblock %}

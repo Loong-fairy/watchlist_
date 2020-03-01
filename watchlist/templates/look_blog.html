@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h3>{{articles.title}}</h3>
+    <span style="float:right;">作者: <span style="color: #2aabd2">{{ articles.user.name }}</span></span><br>
+
+    {{ articles.content|safe }}
+{% endblock %}

@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
+{% block head %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+{% endblock head %}
 {% block content %}
-    <h3>电影编辑页面</h3>
-    <form action="" method="post">
-        电影名<input type="text" name="title" autocomplete="off" required>
-        年份  <input type="text" name="year" autocomplete="off" required>
-        <input type="submit" name="submit" value="更新" class="btn">
+    <h3>更新文章</h3>
+    <form action="{{ url_for('create_blog') }}" method="post">
+        <h4>文章标题</h4>
+        <input type="text" name="title" autocomplete="off" required style="width: 80%;border-radius: 5px" value="{{ articles.title }}">
+        <input type="submit" name="submit"  class="btn" value="更新" style="width: 19%;">
+        <h4>文章内容</h4>
+{#        <input type="text" name="content" autocomplete="off" required>#}
+        <textarea name="content" id="editor1" rows="10" cols="80">{{ articles.content }}</textarea>
     </form>
+    <script>
+        CKEDITOR.replace('content', {
+            filebrowserUploadUrl: '/upload/',
+        });
+    </script>
 {% endblock %}
