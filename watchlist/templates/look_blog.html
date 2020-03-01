@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h3>{{articles.title}}</h3>
+    <h3 style="text-align: center">{{articles.title}}</h3>
     <span style="float:right;">作者: <span style="color: #2aabd2">{{ articles.user.name }}</span></span><br>
+    <span style="float:right;">发布时间: <span style="color: #47434d">{{ "{}".format(articles.pubdate)[:-10] }}</span></span><br>
 
     {{ articles.content|safe }}
 {% endblock %}
